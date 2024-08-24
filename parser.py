@@ -42,10 +42,18 @@ class Parser:
             else:
                 for keyword in keywords:
                     if keyword in str(message.message):
-                        client.forward_messages(resend_to,message.id,from_peer=message.peer_id)
-                        all_messages.append(message.message)
-                        with open ('parsed.txt','a')as file:
-                            file.write(f'{message.id}\n')
+                        try:
+                            client.forward_messages(resend_to,message.id,from_peer=message.peer_id)
+                            all_messages.append(message.message)
+                            with open ('parsed.txt','a')as file:
+                                file.write(f'{message.id}\n')
+                        except:
+                            instr=('Невозможно переслать, так как чат защищен от пересылки\n'+message.message)
+                            client.send_message(resend_to,instr)
+                            with open ('parsed.txt','a')as file:
+                                file.write(f'{message.id}\n')
+                            continue
+                        print(message)
                     else:
                         continue
             offset_id = messages[len(messages) - 1].id
